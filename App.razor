@@ -1,0 +1,51 @@
+﻿<div style="max-width:800px; padding:24px; margin:auto; display:flex; flex-direction:column; gap:12px;">
+    <div>
+        <IgbLegend @ref="_legend"
+                   Orientation="LegendOrientation.Horizontal">
+        </IgbLegend>
+    </div>
+    <IgbDataChart Width="100%"
+                  Height="260px"
+                  Legend="_legend">
+        <IgbCategoryYAxis Name="yAxis" DataSource="_sampleData"
+                          Label="@(nameof(SampleDataItem.Category))" />
+        <IgbNumericXAxis Name="xAxis"
+                         MinimumValue="0"
+                         MaximumValue="10"
+                         LabelFormat="$ {0}"
+                         Interval="1.25">
+            <IgbNumberFormatSpecifier MaximumFractionDigits="2" MinimumFractionDigits="0" />
+        </IgbNumericXAxis>
+        <IgbBarSeries Title="Value"
+                      DataSource="_sampleData"
+                      XAxisName="xAxis"
+                      YAxisName="yAxis"
+                      ValueMemberPath="@nameof(SampleDataItem.Value)" />
+        <IgbDataToolTipLayer Name="DataToolTipLayer"
+                             ValueFormatString="$ {0}"
+                             ValueFormatMinFractions="0"
+                             ValueFormatMaxFractions="2"
+                             ValueFormatAbbreviation="DataAbbreviationMode.None" />
+    </IgbDataChart>
+</div>
+
+@code
+{
+    private record SampleDataItem(string Category, double Value);
+    private readonly IEnumerable<SampleDataItem> _sampleData = new List<SampleDataItem>
+{
+    new SampleDataItem("Sample A", 3.45678),
+    new SampleDataItem("Sample B", 5.67891),
+    new SampleDataItem("Sample C", 8.91234),
+};
+
+    private IgbLegend? _legend;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            StateHasChanged();
+        }
+    }
+}
